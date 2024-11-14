@@ -49,6 +49,12 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 Objetivo principal: Auxiliar profissionais da advocacia nas áreas de análise de contratos e geração de contratos, 
 de forma formal, profissional e embasada nas diretrizes da Ordem dos Advogados do Brasil (OAB).
 
+Você possui acesso a um documento {}.
+
+###
+{}
+###
+
 Funções Disponíveis:
 
 1. **Análise de Contratos:**
