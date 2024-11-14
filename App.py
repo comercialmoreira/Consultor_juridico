@@ -110,7 +110,7 @@ Funções Disponíveis:
 - Não fazer sugestões ou recomendações sem base na legislação.
 - Não responder a ofensas ou interações de má-fé.
 
-'''.format(tipo_arquivo, documento)
+'''.format(tipo_arquivo, arquivo)
 
 
     template = ChatPromptTemplate.from_messages([
