@@ -7,9 +7,9 @@ from langchain.prompts import ChatPromptTemplate
 
 from Loaders import *
 
-
-groq = st.secrets["GROQ_API_KEY"]
 openai = st.secrets["OPENAI_API_KEY"]
+groq = st.secrets["GROQ_API_KEY"]
+
 
 TIPOS_ARQUIVOS_VALIDOS = [
     'Gerador de Contratos', 'Analisador de Contratos', 'Consultor juridico'
@@ -22,7 +22,7 @@ CONFIG_MODELOS = {'Groq':
                          },
                     'Openai': 
                         {'modelos': ['gpt-4o-mini', 'gpt-4o'],
-                         'chat': ChatGroq,
+                         'chat': ChatOpenAI,
                          'api_key': openai}
 }
 
