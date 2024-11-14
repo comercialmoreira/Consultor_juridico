@@ -146,7 +146,7 @@ def pagina_chat():
         chat = st.chat_message('ai')
         resposta = chat.write_stream(chain.stream({
             'input': input_usuario, 
-            'chat_history': memoria.buffer_as_messages
+            'chat_history':  "\n".join([msg.content for msg in memoria.buffer_as_messages])
             }))
         
         memoria.chat_memory.add_user_message(input_usuario)
