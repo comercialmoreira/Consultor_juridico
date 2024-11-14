@@ -9,15 +9,21 @@ from Loaders import *
 
 
 groq = st.secrets["GROQ_API_KEY"]
+openai = st.secrets["OPENAI_API_KEY"]
 
 TIPOS_ARQUIVOS_VALIDOS = [
-    'Gerador de Contratos', 'Analisador de Contratos'
+    'Gerador de Contratos', 'Analisador de Contratos', 'Consultor juridico'
 ]
 
 CONFIG_MODELOS = {'Groq': 
                         {'modelos': ['llama-3.1-70b-versatile', 'gemma2-9b-it', 'mixtral-8x7b-32768'],
                          'chat': ChatGroq,
-                         'api_key': groq}
+                         'api_key': groq,
+                         },
+                    'Openai': 
+                        {'modelos': ['gpt-4o-mini', 'gpt-4o'],
+                         'chat': ChatGroq,
+                         'api_key': openai}
 }
 
 
@@ -31,6 +37,8 @@ def carrega_arquivos(tipo_arquivo, arquivo):
             temp.write(arquivo.read())
             nome_temp = temp.name
         documento = carrega_pdf(nome_temp)
+    if tipo_arquivo == 'Consultor juridico':
+        documento = carrega_site(arquivo)
     return documento
 
 def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
@@ -140,10 +148,12 @@ def pagina_chat():
 def sidebar():
     tabs = st.tabs(['Upload de Arquivos', 'Seleção de Modelos'])
     with tabs[0]:
-        tipo_arquivo = st.selectbox('Selecione o tipo de arquivo', TIPOS_ARQUIVOS_VALIDOS)
+        tipo_arquivo = st.selectbox('Selecione o tipo de assistente', TIPOS_ARQUIVOS_VALIDOS)
         if tipo_arquivo == 'Analisador de Contratos':
             arquivo = st.file_uploader('Faça o upload do arquivo pdf', type=['.pdf'])
         if tipo_arquivo == 'Gerador de Contratos':
+            arquivo = "https://wolfadvocacia.com.br"
+        if tipo_arquivo == 'Consultor juridico':
             arquivo = "https://wolfadvocacia.com.br"
        
 
