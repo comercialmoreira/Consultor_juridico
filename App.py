@@ -175,13 +175,15 @@ def pagina_chat():
             'chat_history': chat_history
         })
 
-        # Coletar e montar a resposta da IA
+        # Coletar e montar a resposta da IA, extraindo apenas o conteúdo dos chunks
         resposta = ""
         for chunk in resposta_stream:
-            if isinstance(chunk, str):
-                resposta += chunk
+            if hasattr(chunk, 'content'):
+                resposta += chunk.content  # Extrair apenas o conteúdo de cada AIMessageChunk
             else:
-                resposta += str(chunk)  # Converter AIMessageChunk para string antes de concatenar
+                resposta += str(chunk)  # Caso o chunk seja uma string
+
+            # Atualizar a resposta dinamicamente no chat
             chat.markdown(resposta)
 
         # Atualizar memória de conversação
