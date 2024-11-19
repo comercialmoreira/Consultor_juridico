@@ -39,26 +39,18 @@ def apply_custom_styles():
         }}
         /* Estilização customizada da sidebar */
         [data-testid="stSidebar"] {{
-            background-color: #587472;
-            color: #fff;
+            background-color: #363636;
+            color: white;
         }}
         /* Estilização dos botões na sidebar */
         .stButton>button {{
-            background-color: #774BFF;
+            background-color: #587472;
             color: white;
             border-radius: 8px;
             border: none;
             padding: 10px 20px;
             font-size: 16px;
             margin-bottom: 10px;
-        }}
-        /* Estilização do campo de input */
-        .stTextInput>div>input {{
-            background-color: #40444B;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px;
         }}
         /* Estilização das abas */
         .stTabs [role=tab] {{
