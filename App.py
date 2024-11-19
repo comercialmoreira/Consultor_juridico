@@ -41,6 +41,7 @@ def apply_custom_styles():
         [data-testid="stSidebar"] {{
             background-color: #1C1C1C;
             color: white;
+            font-color: white;
         }}
         /* Estilização dos botões na sidebar */
         .stButton>button {{
