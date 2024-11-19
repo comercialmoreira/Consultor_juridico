@@ -166,24 +166,29 @@ def pagina_chat():
         # Configurar a resposta da IA
         chat = st.chat_message('ai')
 
-        # Ajustar o histórico de chat para uma lista de mensagens base, ao invés de uma string
+        # Ajustar o histórico de chat para uma lista de mensagens base
         chat_history = [{'type': msg.type, 'content': msg.content} for msg in memoria.buffer_as_messages]
 
         # Obter a resposta da IA
         resposta_stream = chain.stream({
             'input': input_usuario,
-            'chat_history': chat_history  # Agora passado como uma lista de mensagens base
+            'chat_history': chat_history
         })
 
+        # Coletar e montar a resposta da IA
         resposta = ""
         for chunk in resposta_stream:
-            resposta += chunk
+            if isinstance(chunk, str):
+                resposta += chunk
+            else:
+                resposta += str(chunk)  # Converter AIMessageChunk para string antes de concatenar
             chat.markdown(resposta)
 
         # Atualizar memória de conversação
         memoria.chat_memory.add_user_message(input_usuario)
         memoria.chat_memory.add_ai_message(resposta)
         st.session_state['memoria'] = memoria
+
 
 def sidebar():
     tabs = st.tabs(['Upload de Arquivos', 'Seleção de Modelos'])
