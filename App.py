@@ -4,11 +4,91 @@ from langchain.memory import ConversationBufferMemory
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-
+import base64  
 from Loaders import *
 
 openai = st.secrets["OPENAI_API_KEY"]
 groq = st.secrets["GROQ_API_KEY"]
+
+
+# Função para codificar a imagem em base64
+def get_base64_image(image_path):
+    with open(image_path, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def apply_custom_styles():
+    image_path = './assets/images/logo.png'  # Caminho para o seu logo
+    encoded_image = get_base64_image(image_path)
+    st.markdown(f"""
+    <style>
+        /* Inserir a imagem no topo da sidebar */
+        [data-testid="stSidebar"]::before {{
+            content: "";
+            display: block;
+            height: 70px;  /* Ajuste a altura conforme necessário */
+            background-image: url('data:image/png;base64,{encoded_image}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-top:40px;
+        }}
+        /* Ajustar o padding para evitar sobreposição */
+        [data-testid="stSidebar"] .block-container {{
+            padding-top: 40px;  /* Deve ser maior que a altura da imagem */
+        }}
+        /* Estilização customizada da sidebar */
+        [data-testid="stSidebar"] {{
+            background-color: #1F1F1F;
+            color: #fff;
+        }}
+        /* Estilização dos botões na sidebar */
+        .stButton>button {{
+            background-color: #774BFF;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }}
+        /* Estilização do campo de input */
+        .stTextInput>div>input {{
+            background-color: #40444B;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+        }}
+        /* Estilização das abas */
+        .stTabs [role=tab] {{
+            background-color: #40444B;
+            border: none;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+        }}
+        /* Estilização da aba selecionada */
+        .stTabs [role=tab][aria-selected="true"] {{
+            background-color: #6A5ACD;
+        }}
+    </style>
+    """, unsafe_allow_html=True)
+
+apply_custom_styles()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 TIPOS_ARQUIVOS_VALIDOS = [
