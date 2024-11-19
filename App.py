@@ -151,19 +151,28 @@ def pagina_chat():
 
     memoria = st.session_state.get('memoria', MEMORIA)
 
+    # Carregar histórico de mensagens
     for mensagem in memoria.buffer_as_messages:
         chat = st.chat_message(mensagem.type)
         chat.markdown(mensagem.content)
 
+    # Capturar a entrada do usuário
     input_usuario = st.chat_input('Digite para o seu assistente')
     if input_usuario:
+        # Mostrar a entrada do usuário na interface
         chat = st.chat_message('human')
         chat.markdown(input_usuario)
 
+        # Configurar a resposta da IA
         chat = st.chat_message('ai')
+
+        # Ajustar o histórico de chat para uma lista de mensagens base, ao invés de uma string
+        chat_history = [{'type': msg.type, 'content': msg.content} for msg in memoria.buffer_as_messages]
+
+        # Obter a resposta da IA
         resposta_stream = chain.stream({
             'input': input_usuario,
-            'chat_history': "\n".join([msg.content for msg in memoria.buffer_as_messages])
+            'chat_history': chat_history  # Agora passado como uma lista de mensagens base
         })
 
         resposta = ""
@@ -171,6 +180,7 @@ def pagina_chat():
             resposta += chunk
             chat.markdown(resposta)
 
+        # Atualizar memória de conversação
         memoria.chat_memory.add_user_message(input_usuario)
         memoria.chat_memory.add_ai_message(resposta)
         st.session_state['memoria'] = memoria
