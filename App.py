@@ -175,26 +175,16 @@ def pagina_chat():
             'chat_history': chat_history
         })
 
-        # Coletar e montar a resposta da IA, atualizando de forma menos fragmentada
+        # Acumular todos os fragmentos antes de exibir
         resposta = ""
-        buffer_fragmentos = ""
-
         for chunk in resposta_stream:
             if hasattr(chunk, 'content'):
-                buffer_fragmentos += chunk.content  # Acumular conteúdo do chunk
+                resposta += chunk.content
             else:
-                buffer_fragmentos += str(chunk)
+                resposta += str(chunk)
 
-            # Atualizar a resposta a cada frase ou quando o buffer for suficientemente grande
-            if "." in buffer_fragmentos or len(buffer_fragmentos) > 50:
-                resposta += buffer_fragmentos
-                chat.markdown(resposta)  # Atualiza o chat com o conteúdo acumulado
-                buffer_fragmentos = ""  # Limpa o buffer para o próximo trecho
-
-        # Se restar algo no buffer, adicione à resposta final
-        if buffer_fragmentos:
-            resposta += buffer_fragmentos
-            chat.markdown(resposta)
+        # Mostrar a resposta completa no chat após acumular todos os fragmentos
+        chat.markdown(resposta)
 
         # Atualizar memória de conversação
         memoria.chat_memory.add_user_message(input_usuario)
