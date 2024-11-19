@@ -26,7 +26,7 @@ def apply_custom_styles():
         [data-testid="stSidebar"]::before {{
             content: "";
             display: block;
-            height: 140px;  /* Ajuste a altura conforme necessário */
+            height: 130px;  /* Ajuste a altura conforme necessário */
             background-image: url('data:image/png;base64,{encoded_image}');
             background-size: contain;
             background-repeat: no-repeat;
@@ -36,6 +36,11 @@ def apply_custom_styles():
         /* Ajustar o padding para evitar sobreposição */
         [data-testid="stSidebar"] .block-container {{
             padding-top: 40px;  /* Deve ser maior que a altura da imagem */
+        }}
+        /* Estilização customizada da sidebar */
+        [data-testid="stSidebar"] {{
+            background-color: #587472;
+            color: #fff;
         }}
         /* Estilização dos botões na sidebar */
         .stButton>button {{
