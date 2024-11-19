@@ -39,7 +39,7 @@ def apply_custom_styles():
         }}
         /* Estilização customizada da sidebar */
         [data-testid="stSidebar"] {{
-            background-color: #363636;
+            background-color: #1C1C1C;
             color: white;
         }}
         /* Estilização dos botões na sidebar */
@@ -62,7 +62,7 @@ def apply_custom_styles():
         }}
         /* Estilização da aba selecionada */
         .stTabs [role=tab][aria-selected="true"] {{
-            background-color: #6A5ACD;
+            background-color: #587472;
         }}
     </style>
     """, unsafe_allow_html=True)
