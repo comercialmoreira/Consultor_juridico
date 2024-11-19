@@ -37,11 +37,6 @@ def apply_custom_styles():
         [data-testid="stSidebar"] .block-container {{
             padding-top: 40px;  /* Deve ser maior que a altura da imagem */
         }}
-        /* Estilização customizada da sidebar */
-        [data-testid="stSidebar"] {{
-            background-color: #1F1F1F;
-            color: #fff;
-        }}
         /* Estilização dos botões na sidebar */
         .stButton>button {{
             background-color: #774BFF;
