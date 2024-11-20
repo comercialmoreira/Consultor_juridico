@@ -26,7 +26,7 @@ def apply_custom_styles():
         [data-testid="stSidebar"]::before {{
             content: "";
             display: block;
-            height: 130px;  /* Ajuste a altura conforme necessário */
+            height: 100px;  /* Ajuste a altura conforme necessário */
             background-image: url('data:image/png;base64,{encoded_image}');
             background-size: contain;
             background-repeat: no-repeat;
