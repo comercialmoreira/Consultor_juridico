@@ -142,7 +142,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     st.session_state['chain'] = chain
 
 def pagina_chat():
-    st.header('Consultor :violet[Juridico]', divider='violet')
+    st.header('Consultor :green[Juridico]', divider='green')
 
     chain = st.session_state.get('chain')
     if chain is None:
