@@ -9,10 +9,11 @@ import base64
 
 
 
-# 
-
 st.page_config(
     page_title="Gerador de Contratos",
+    page_icon="📝",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # Função para codificar a imagem em base64
