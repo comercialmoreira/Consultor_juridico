@@ -22,7 +22,7 @@ def apply_custom_styles():
         [data-testid="stSidebar"]::before {{
             content: "";
             display: block;
-            height: 110px;
+            height: 130px;
             background-image: url('data:image/png;base64,{encoded_image}');
             background-size: contain;
             background-repeat: no-repeat;
@@ -30,7 +30,7 @@ def apply_custom_styles():
             margin-top:40px;
         }}
         [data-testid="stSidebar"] .block-container {{
-            padding-top: 40px;
+            padding-top: 20px;
         }}
         [data-testid="stSidebar"] {{
             background-color: #1C1C1C;
@@ -74,7 +74,7 @@ BASE_EXEMPLOS_DIR = "exemplos"
 # Sidebar para seleção de agentes
 st.sidebar.title("Selecione o tipo de contrato")
 agente_selecionado = st.sidebar.selectbox("Agentes", list(agentes_map.keys()))
-st.header('_Wolf_ :green[AI]', divider='green')
+st.header('Gerador de Contratos', divider='green')
 
 # Função para extrair texto de arquivos DOCX
 def extract_text_from_docx(docx_path):
