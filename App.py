@@ -141,11 +141,11 @@ Analise o seguinte contrato de exemplo:
 
 {texto_exemplo}
 
-Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
+Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de 10 perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
 
-A lista de perguntas nunca deve ter: Campo 'Variável' como algo a ser preenchido. 
 
-A lista de perguntas deve ter no máximo 10 perguntas. As 10 perguntas mais importantes, que fará você ser capaz de preencher todo o contrato de exemplo selecionado pelo usuário.
+
+
 """
 
 perguntas = gerar_perguntas(prompt_perguntas)
