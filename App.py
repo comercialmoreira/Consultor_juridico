@@ -141,7 +141,7 @@ Você é um especialista jurídico com a tarefa de personalizar contratos. Anali
 
 {texto_exemplo}
 
-Identifique os 10 campos variáveis mais importantes e crie uma lista de perguntas que devem ser feitas ao usuário para preencher todas as informações necessárias para personalizar completamente o contrato.
+Identifique os 15 campos variáveis mais importantes e crie uma lista de perguntas que devem ser feitas ao usuário para preencher todas as informações necessárias para personalizar completamente o contrato, sem campos faltantes.
 
 As perguntas devem:
 1. Ser claras e objetivas.
@@ -149,7 +149,7 @@ As perguntas devem:
 3. Focar apenas nos elementos essenciais para evitar redundâncias.
 4. Estar formatadas como uma lista numerada.
 
-Por favor, responda com apenas as 10 perguntas.
+Por favor, responda com apenas as 15 perguntas.
 """
 
 perguntas = gerar_perguntas(prompt_perguntas)
@@ -170,7 +170,7 @@ if submit:
     prompt_contrato = f"""
 Você é um assistente jurídico e recebeu um contrato de exemplo e as respostas fornecidas pelo usuário para campos variáveis. Sua tarefa é gerar um contrato completo e personalizado.
 
-Contrato de exemplo:
+Contrato de exemplo para ser seguido:
 {texto_exemplo}
 
 Respostas do usuário:
@@ -179,7 +179,7 @@ Respostas do usuário:
 Requisitos:
 1. Use a estrutura e o texto do contrato de exemplo como base.
 2. Substitua os campos variáveis pelas respostas do usuário.
-3. Certifique-se de que o contrato resultante esteja completo, claro e juridicamente correto.
+3. Certifique-se de que o contrato resultante esteja completo, claro e juridicamente correto, sem campos faltantes.
 4. Mantenha o tom profissional e a formatação consistente.
 
 Gere o contrato completo e personalizado abaixo:
