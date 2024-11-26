@@ -60,12 +60,12 @@ apply_custom_styles()
 # Mapeamento de agentes para subdiretórios
 agentes_map = {
     "Prestação de serviços": "prestacao_servicos",
-    "Parcerias e Coproduções": "parcerias_coproducoes",
+    "Parcerias & Coproduções": "parcerias_coproducoes",
     "Contratação de Colaboradores": "contratacao_colaboradores",
     "Confidencialidade e Não Concorrência": "confidencialidade",
-    "Termos de Uso e Políticas de Privacidade": "termos_politicas",
+    "Políticas de Privacidade": "termos_politicas",
     "Propriedade Intelectual": "propriedade_intelectual",
-    "Mentorias e Masterminds": "mentorias_masterminds",
+    "Mentorias & Masterminds": "mentorias_masterminds",
     "Acordos Societários": "acordos_societarios",
 }
 
