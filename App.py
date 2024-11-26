@@ -59,7 +59,7 @@ apply_custom_styles()
 
 # Mapeamento de agentes para subdiretórios
 agentes_map = {
-    "Prestação de serviços": "prestacao_servicos",
+    "Prestação de Serviços": "prestacao_servicos",
     "Parcerias & Coproduções": "parcerias_coproducoes",
     "Contratação de Colaboradores": "contratacao_colaboradores",
     "Confidencialidade e Não Concorrência": "confidencialidade",
@@ -74,7 +74,7 @@ BASE_EXEMPLOS_DIR = "exemplos"
 # Sidebar para seleção de agentes
 st.sidebar.title("Selecione o tipo de contrato")
 agente_selecionado = st.sidebar.selectbox("Agentes", list(agentes_map.keys()))
-st.title("Gerador de Contratos")
+st.header('green:[Gerador de Contratos]', divider='green')
 
 # Função para extrair texto de arquivos DOCX
 def extract_text_from_docx(docx_path):
