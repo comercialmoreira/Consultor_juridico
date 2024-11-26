@@ -140,7 +140,7 @@ texto_exemplo = subtipos_contratos[tipo_contrato_selecionado]
 # Configurar o modelo GPT-4 via LangChain
 llm = ChatOpenAI(
     model="gpt-4",
-    openai_api_key="sk-proj-oU3omV3KhkO6JFTlsLhJT3BlbkFJHCKUwRCJrUVXJJddf08m"
+    openai_api_key=st.secrets["OPENAI_API_KEY"],
 )
 
 # Função para gerar perguntas
