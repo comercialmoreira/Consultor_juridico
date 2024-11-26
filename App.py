@@ -1,14 +1,12 @@
-import tempfile
+import os
 import streamlit as st
-from langchain.memory import ConversationBufferMemory
-from langchain_groq import ChatGroq
-from langchain_openai import ChatOpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-import base64  
-from Loaders import *
+from langchain.schema import HumanMessage
+from docx import Document
+from io import BytesIO
+import base64 
 
-openai = st.secrets["OPENAI_API_KEY"]
-groq = st.secrets["GROQ_API_KEY"]
 
 
 # Função para codificar a imagem em base64
@@ -16,7 +14,7 @@ def get_base64_image(image_path):
     with open(image_path, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
-
+# Configuração inicial da página
 def apply_custom_styles():
     image_path = './assets/images/logo.png'  # Caminho para o seu logo
     encoded_image = get_base64_image(image_path)
@@ -71,154 +69,152 @@ def apply_custom_styles():
 apply_custom_styles()
 
 
-
-TIPOS_ARQUIVOS_VALIDOS = [
-    'Gerador de Contratos', 'Analisador de Contratos', 'Consultor juridico'
-]
-
-CONFIG_MODELOS = {'Groq': 
-                        {'modelos': ['llama-3.1-70b-versatile', 'gemma2-9b-it', 'mixtral-8x7b-32768'],
-                         'chat': ChatGroq,
-                         'api_key': groq,
-                         },
-                    'Openai': 
-                        {'modelos': ['gpt-4o-mini', 'gpt-4o'],
-                         'chat': ChatOpenAI,
-                         'api_key': openai}
+# Mapeamento de agentes para subdiretórios
+agentes_map = {
+    "Contrato de prestação de serviços": "prestacao_servicos",
+    "Contrato de Parcerias e Coproduções": "parcerias_coproducoes",
+    "Contrato de Contratação de Colaboradores": "contratacao_colaboradores",
+    "Contrato de Confidencialidade e Não Concorrência": "confidencialidade",
+    "Contrato de Termos de Uso e Políticas de Privacidade": "termos_politicas",
+    "Contrato de Propriedade Intelectual": "propriedade_intelectual",
+    "Contrato de Mentorias e Masterminds": "mentorias_masterminds",
+    "Contrato de Acordos Societários": "acordos_societarios",
 }
 
+# Caminho base do diretório de exemplos
+BASE_EXEMPLOS_DIR = "exemplos"
 
-MEMORIA = ConversationBufferMemory()
+# Sidebar para seleção de agentes
+st.sidebar.title("Selecione o tipo de contrato")
+agente_selecionado = st.sidebar.selectbox("Agentes", list(agentes_map.keys()))
 
+# Título principal
+st.title("Gerador de Contratos")
 
-PROMPTS = {
-    'Gerador de Contratos': '''
-    Objetivo: Gerar um contrato robusto baseado nas informações fornecidas.
-    Para começar, preciso de algumas informações básicas:
-    - Quais são as partes envolvidas?
-    - Qual é o objeto do contrato?
-    - Qual será a duração e condições de rescisão?
-    - Existem obrigações específicas?
-    {input}
-    ''',
-    'Analisador de Contratos': '''
-    Objetivo: Analisar o contrato fornecido e fornecer uma análise detalhada.
-    Vou revisar cada cláusula e sugerir melhorias, caso necessário.
-    {input}
-    ''',
-    'Consultor juridico': '''
-    Objetivo: Fornecer consultoria jurídica com base nas informações fornecidas.
-    Por favor, descreva a questão jurídica que deseja discutir.
-    {input}
-    '''
-}
+# Função para extrair texto de arquivos DOCX
+def extract_text_from_docx(docx_path):
+    doc = Document(docx_path)
+    text = []
+    for paragraph in doc.paragraphs:
+        text.append(paragraph.text)
+    return "\n".join(text)
 
-def carrega_arquivos(tipo_arquivo, arquivo):
-    if tipo_arquivo == 'Gerador de Contratos':
-        documento = carrega_site(arquivo)
-    if tipo_arquivo == 'Analisador de Contratos':
-        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp:
-            temp.write(arquivo.read())
-            nome_temp = temp.name
-        documento = carrega_pdf(nome_temp)
-    if tipo_arquivo == 'Consultor juridico':
-        documento = carrega_site(arquivo)
-    return documento
+# Função para carregar os exemplos e identificar os subtipos de contratos
+def identificar_tipos_contratos(pasta_exemplo):
+    subtipos = {}
+    if os.path.exists(pasta_exemplo):
+        arquivos_exemplo = [
+            f for f in os.listdir(pasta_exemplo) if f.endswith(".docx")
+        ]
+        for arquivo in arquivos_exemplo:
+            caminho_arquivo = os.path.join(pasta_exemplo, arquivo)
+            texto = extract_text_from_docx(caminho_arquivo)
+            subtipos[arquivo] = texto
+    return subtipos
 
-def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
+# Obter a pasta correspondente ao agente selecionado
+pasta_agente = agentes_map.get(agente_selecionado)
+pasta_exemplo = os.path.join(BASE_EXEMPLOS_DIR, pasta_agente)
 
-    documento = carrega_arquivos(tipo_arquivo, arquivo)
+# Identificar os subtipos de contratos disponíveis
+subtipos_contratos = identificar_tipos_contratos(pasta_exemplo)
 
-    system_message = PROMPTS[tipo_arquivo].format(input=documento)
+# Passo 1: Perguntar ao usuário qual tipo de contrato ele deseja
+st.header("1. Escolha o tipo de contrato")
 
-    template = ChatPromptTemplate.from_messages([
-        ('system', system_message),
-        ('placeholder', '{chat_history}'),
-        ('user', '{input}')
-    ])
-    chat = CONFIG_MODELOS[provedor]['chat'](model=modelo, api_key=api_key)
-    chain = template | chat
+if subtipos_contratos:
+    tipo_contrato_selecionado = st.selectbox(
+        "Selecione o tipo de contrato desejado:",
+        list(subtipos_contratos.keys())
+    )
+else:
+    st.warning("Nenhum exemplo de contrato encontrado para este agente.")
+    st.stop()
 
-    st.session_state['chain'] = chain
+# Passo 2: Gerar perguntas dinâmicas com base no exemplo selecionado
+st.header("2. Responda às perguntas para personalizar o contrato")
 
-def pagina_chat():
-    st.header('Consultor :green[Jurídico]', divider='green')
+# Carregar o exemplo selecionado
+texto_exemplo = subtipos_contratos[tipo_contrato_selecionado]
 
-    chain = st.session_state.get('chain')
-    if chain is None:
-        st.error('Carregue o assistente na sidebar antes de usar o chat')
-        st.stop()
+# Configurar o modelo GPT-4 via LangChain
+llm = ChatOpenAI(
+    model="gpt-4",
+    openai_api_key="sk-proj-oU3omV3KhkO6JFTlsLhJT3BlbkFJHCKUwRCJrUVXJJddf08m"
+)
 
-    memoria = st.session_state.get('memoria', MEMORIA)
+# Função para gerar perguntas
+@st.cache_data
+def gerar_perguntas(prompt):
+    response = llm(messages=[HumanMessage(content=prompt)])
+    return response.content.split("\n")
 
-    # Carregar histórico de mensagens
-    for mensagem in memoria.buffer_as_messages:
-        chat = st.chat_message(mensagem.type)
-        chat.markdown(mensagem.content)
+# Criar perguntas dinâmicas baseadas no exemplo selecionado
+prompt_perguntas = f"""
+Analise o seguinte contrato de exemplo:
 
-    # Capturar a entrada do usuário
-    input_usuario = st.chat_input('Digite para o seu assistente')
-    if input_usuario:
-        # Mostrar a entrada do usuário na interface
-        chat = st.chat_message('human')
-        chat.markdown(input_usuario)
+{texto_exemplo}
 
-        # Configurar a resposta da IA
-        chat = st.chat_message('ai')
+Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
+"""
 
-        # Ajustar o histórico de chat para uma lista de mensagens base
-        chat_history = [{'type': msg.type, 'content': msg.content} for msg in memoria.buffer_as_messages]
+perguntas = gerar_perguntas(prompt_perguntas)
 
-        # Obter a resposta da IA
-        resposta_stream = chain.stream({
-            'input': input_usuario,
-            'chat_history': chat_history
-        })
+# Capturar as respostas dos usuários sem session_state
+respostas = {}
 
-        # Acumular todos os fragmentos antes de exibir
-        resposta = ""
-        for chunk in resposta_stream:
-            if hasattr(chunk, 'content'):
-                resposta += chunk.content
-            else:
-                resposta += str(chunk)
+with st.form("formulario_perguntas"):
+    st.write("Por favor, preencha as informações abaixo para personalizar o contrato:")
+    
+    for pergunta in perguntas:
+        if pergunta.strip():
+            respostas[pergunta] = st.text_input(pergunta)
 
-        # Mostrar a resposta completa no chat após acumular todos os fragmentos
-        chat.markdown(resposta)
+    # Botão para submeter as respostas
+    submit = st.form_submit_button("Enviar Respostas")
 
-        # Atualizar memória de conversação
-        memoria.chat_memory.add_user_message(input_usuario)
-        memoria.chat_memory.add_ai_message(resposta)
-        st.session_state['memoria'] = memoria
+# Passo 3: Gerar o contrato personalizado
+st.header("3. Contrato Gerado")
 
+if submit:
+    st.success("Respostas salvas com sucesso!")
 
-def sidebar():
-    tabs = st.tabs(['Upload de Arquivos', 'Seleção de Modelos'])
-    with tabs[0]:
-        tipo_arquivo = st.selectbox('Selecione o tipo de assistente', TIPOS_ARQUIVOS_VALIDOS)
-        if tipo_arquivo == 'Analisador de Contratos':
-            arquivo = st.file_uploader('Faça o upload do arquivo pdf', type=['.pdf'])
-        if tipo_arquivo == 'Gerador de Contratos':
-            arquivo = "https://wolfadvocacia.com.br"
-        if tipo_arquivo == 'Consultor juridico':
-            arquivo = "https://wolfadvocacia.com.br"
-       
+    # Prompt para gerar o contrato com base nas respostas do usuário
+    prompt_contrato = f"""
+    Com base no contrato de exemplo abaixo:
 
-    with tabs[1]:
-        provedor = st.selectbox('Selecione o provedor dos modelo', CONFIG_MODELOS.keys())
-        modelo = st.selectbox('Selecione o modelo', CONFIG_MODELOS[provedor]['modelos'])
-        api_key = CONFIG_MODELOS[provedor]['api_key']
-        
-    if st.button('Inicializar Assistente', use_container_width=True):
-            carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
-    if st.button('Apagar Histórico de Conversa', use_container_width=True):
-            st.session_state['memoria'] = MEMORIA
+    {texto_exemplo}
 
-def main():
-    with st.sidebar:
-        sidebar()
-    pagina_chat()
+    E nas respostas fornecidas pelo usuário:
 
+    {', '.join([f"{k}: {v}" for k, v in respostas.items()])}
 
-if __name__ == '__main__':
-    main()
+    Gere um contrato completo e personalizado.
+    """
+
+    response_contrato = llm(messages=[HumanMessage(content=prompt_contrato)])
+    contrato_gerado = response_contrato.content
+
+    # Exibir o contrato gerado
+    st.text_area("Contrato Gerado", contrato_gerado, height=400)
+
+    # Opção de exportar o contrato
+    st.download_button(
+        "Baixar como PDF",
+        data=contrato_gerado.encode("utf-8"),
+        file_name="contrato_gerado.pdf",
+        mime="application/pdf",
+    )
+
+    # Exportação como DOCX
+    doc = Document()
+    doc.add_paragraph(contrato_gerado)
+    doc_io = BytesIO()
+    doc.save(doc_io)
+    doc_io.seek(0)
+    st.download_button(
+        "Baixar como DOCX",
+        data=doc_io,
+        file_name="contrato_gerado.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    )
