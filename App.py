@@ -71,14 +71,14 @@ apply_custom_styles()
 
 # Mapeamento de agentes para subdiretórios
 agentes_map = {
-    "Contrato de prestação de serviços": "prestacao_servicos",
-    "Contrato de Parcerias e Coproduções": "parcerias_coproducoes",
-    "Contrato de Contratação de Colaboradores": "contratacao_colaboradores",
-    "Contrato de Confidencialidade e Não Concorrência": "confidencialidade",
-    "Contrato de Termos de Uso e Políticas de Privacidade": "termos_politicas",
-    "Contrato de Propriedade Intelectual": "propriedade_intelectual",
-    "Contrato de Mentorias e Masterminds": "mentorias_masterminds",
-    "Contrato de Acordos Societários": "acordos_societarios",
+    "Prestação de serviços": "prestacao_servicos",
+    "Parcerias e Coproduções": "parcerias_coproducoes",
+    "Contratação de Colaboradores": "contratacao_colaboradores",
+    "Confidencialidade e Não Concorrência": "confidencialidade",
+    "Termos de Uso e Políticas de Privacidade": "termos_politicas",
+    "Propriedade Intelectual": "propriedade_intelectual",
+    "Mentorias e Masterminds": "mentorias_masterminds",
+    "Acordos Societários": "acordos_societarios",
 }
 
 # Caminho base do diretório de exemplos
