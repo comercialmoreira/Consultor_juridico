@@ -9,7 +9,7 @@ import base64
 
 
 
-st.page_config(
+st.set_page_config(
     page_title="Gerador de Contratos",
     page_icon="📝",
     layout="wide",
