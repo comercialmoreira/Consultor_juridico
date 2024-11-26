@@ -141,11 +141,7 @@ Analise o seguinte contrato de exemplo:
 
 {texto_exemplo}
 
-Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de 10 perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
-
-
-
-
+Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
 """
 
 perguntas = gerar_perguntas(prompt_perguntas)
@@ -177,6 +173,7 @@ if submit:
     response_contrato = llm(messages=[HumanMessage(content=prompt_contrato)])
     contrato_gerado = response_contrato.content
     st.text_area("Contrato Gerado", contrato_gerado, height=400)
+   
     doc = Document()
     doc.add_paragraph(contrato_gerado)
     doc_io = BytesIO()
