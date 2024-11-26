@@ -74,7 +74,7 @@ BASE_EXEMPLOS_DIR = "exemplos"
 # Sidebar para seleção de agentes
 st.sidebar.title("Selecione o tipo de contrato")
 agente_selecionado = st.sidebar.selectbox("Agentes", list(agentes_map.keys()))
-st.header('green[Gerador de Contratos]', divider='green')
+st.header('_Wolf_ :green[AI]', divider='green')
 
 # Função para extrair texto de arquivos DOCX
 def extract_text_from_docx(docx_path):
