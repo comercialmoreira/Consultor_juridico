@@ -137,11 +137,19 @@ def gerar_perguntas(prompt):
     return response.content.split("\n")
 
 prompt_perguntas = f"""
-Analise o seguinte contrato de exemplo:
+Você é um especialista jurídico com a tarefa de personalizar contratos. Analise o seguinte contrato de exemplo:
 
 {texto_exemplo}
 
-Identifique os campos variáveis (ex.: nome, valor, prazo, responsabilidades, etc.) e crie uma lista de perguntas que devem ser feitas ao usuário para preencher as informações necessárias para gerar um contrato personalizado.
+Identifique os 10 campos variáveis mais importantes e crie uma lista de perguntas que devem ser feitas ao usuário para preencher todas as informações necessárias para personalizar completamente o contrato.
+
+As perguntas devem:
+1. Ser claras e objetivas.
+2. Abranger informações críticas como nomes, valores, prazos, responsabilidades, condições específicas, e qualquer outro detalhe indispensável.
+3. Focar apenas nos elementos essenciais para evitar redundâncias.
+4. Estar formatadas como uma lista numerada.
+
+Por favor, responda com apenas as 10 perguntas.
 """
 
 perguntas = gerar_perguntas(prompt_perguntas)
@@ -160,20 +168,26 @@ st.header("3. Contrato Gerado")
 if submit:
     st.success("Respostas salvas com sucesso!")
     prompt_contrato = f"""
-    Com base no contrato de exemplo abaixo:
+Você é um assistente jurídico e recebeu um contrato de exemplo e as respostas fornecidas pelo usuário para campos variáveis. Sua tarefa é gerar um contrato completo e personalizado.
 
-    {texto_exemplo}
+Contrato de exemplo:
+{texto_exemplo}
 
-    E nas respostas fornecidas pelo usuário:
+Respostas do usuário:
+{', '.join([f"{k}: {v}" for k, v in respostas.items()])}
 
-    {', '.join([f"{k}: {v}" for k, v in respostas.items()])}
+Requisitos:
+1. Use a estrutura e o texto do contrato de exemplo como base.
+2. Substitua os campos variáveis pelas respostas do usuário.
+3. Certifique-se de que o contrato resultante esteja completo, claro e juridicamente correto.
+4. Mantenha o tom profissional e a formatação consistente.
 
-    Gere um contrato completo e personalizado.
-    """
+Gere o contrato completo e personalizado abaixo:
+"""
     response_contrato = llm(messages=[HumanMessage(content=prompt_contrato)])
     contrato_gerado = response_contrato.content
     st.text_area("Contrato Gerado", contrato_gerado, height=400)
-   
+      # Somente a opção de baixar como DOCX
     doc = Document()
     doc.add_paragraph(contrato_gerado)
     doc_io = BytesIO()
