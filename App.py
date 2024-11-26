@@ -7,6 +7,14 @@ from docx import Document
 from io import BytesIO
 import base64
 
+
+
+# 
+
+st.page_config(
+    page_title="Gerador de Contratos",
+)
+
 # Função para codificar a imagem em base64
 def get_base64_image(image_path):
     with open(image_path, 'rb') as f:
